@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QuizMaster Pro - Student Dashboard</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        /* Header */
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            padding: 1rem 2rem;
+            box-shadow: 0 2px 20px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: #667eea;
+        }
+
+        .logo i {
+            margin-right: 0.5rem;
+            font-size: 1.8rem;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .profile-btn {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .profile-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+
+        .logout-btn {
+            background: #ef4444;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .logout-btn:hover {
+            background: #dc2626;
+            transform: translateY(-2px);
+        }
+
+        /* Main Content */
+        .main-content {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+
+        /* Stats Cards */
+        .stats-section {
+            grid-column: 1 / -1;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            padding: 1.5rem;
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .stat-card i {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 0.25rem;
+        }
+
+        .stat-label {
+            color: #6b7280;
+            font-size: 0.9rem;
+        }
+
+        /* Available Tests */
+        .tests-section {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .test-card {
+            background: #f8fafc;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .test-card:hover {
+            border-color: #667eea;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
+        }
+
+        .test-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+
+        .test-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: #6b7280;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        .start-test-btn {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            width: 100%;
+            transition: all 0.3s ease;
+        }
+
+        .start-test-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+
+        .start-test-btn:disabled {
+            background: #9ca3af;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        /* Recent Results */
+        .results-section {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+        }
+
+        .result-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            background: #f8fafc;
+            border-radius: 8px;
+            margin-bottom: 0.75rem;
+            transition: background 0.3s ease;
+        }
+
+        .result-item:hover {
+            background: #f1f5f9;
+        }
+
+        .result-info h4 {
+            color: #333;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .result-info p {
+            color: #6b7280;
+            font-size: 0.9rem;
+        }
+
+        .result-score {
+            text-align: right;
+        }
+
+        .score {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #16a34a;
+        }
+
+        .score.low {
+            color: #ef4444;
+        }
+
+        .score.medium {
+            color: #f59e0b;
+        }
+
+        /* Profile Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            backdrop-filter: blur(4px);
+            z-index: 1000;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal.show {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 2rem;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            width: 90%;
+            max-width: 500px;
+            animation: slideIn 0.3s ease;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .modal-header h2 {
+            color: #333;
+            font-size: 1.5rem;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #6b7280;
+        }
+
+        .close-btn:hover {
+            color: #333;
+        }
+
+        .profile-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .form-group label {
+            font-weight: 600;
+            color: #333;
+        }
+
+        .form-input {
+            padding: 0.75rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .save-btn {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 0.75rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            margin-top: 1rem;
+        }
+
+        .save-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideIn {
+            from { transform: translateY(-20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+                padding: 0 1rem;
+            }
+
+            .header {
+                padding: 1rem;
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .stats-section {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="header">
+        <div class="logo">
+            <i class="fas fa-brain"></i>
+            QuizMaster Pro
+        </div>
+        <div class="user-info">
+            <span>Welcome, <strong id="username">Student</strong></span>
+            <button class="profile-btn" onclick="openProfileModal()">
+                <i class="fas fa-user"></i> Profile
+            </button>
+            <button class="logout-btn" onclick="logout()">
+               <nav>
+      <a href="index.html" id="logout">Logout</a>
+    </nav>
+            </button>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Stats Section -->
+        <div class="stats-section">
+            <div class="stat-card">
+                <i class="fas fa-clipboard-list"></i>
+                <div class="stat-number" id="testsCompleted">0</div>
+                <div class="stat-label">Tests Completed</div>
+            </div>
+            <div class="stat-card">
+                <i class="fas fa-percentage"></i>
+                <div class="stat-number" id="averageScore">0%</div>
+                <div class="stat-label">Average Score</div>
+            </div>
+            <div class="stat-card">
+                <i class="fas fa-trophy"></i>
+                <div class="stat-number" id="bestScore">0%</div>
+                <div class="stat-label">Best Score</div>
+            </div>
+            <div class="stat-card">
+                <i class="fas fa-clock"></i>
+                <div class="stat-number" id="totalTime">0h</div>
+                <div class="stat-label">Total Study Time</div>
+            </div>
+        </div>
+
+        <!-- Available Tests -->
+        <div class="tests-section">
+            <h2 class="section-title">
+                <i class="fas fa-clipboard-list"></i>
+                Available Tests
+            </h2>
+            <div id="availableTests">
+                <!-- Tests will be loaded here -->
+            </div>
+        </div>
+
+        <!-- Recent Results -->
+        <div class="results-section">
+            <h2 class="section-title">
+                <i class="fas fa-chart-line"></i>
+                Recent Results
+            </h2>
+            <div id="recentResults">
+                <!-- Results will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Profile Modal -->
+    <div id="profileModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2><i class="fas fa-user-circle"></i> My Profile</h2>
+                <button class="close-btn" onclick="closeProfileModal()">&times;</button>
+            </div>
+            <form class="profile-form" id="profileForm">
+                <div class="form-group">
+                    <label for="profileUsername">Username</label>
+                    <input type="text" id="profileUsername" class="form-input" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="profileEmail">Email</label>
+                    <input type="email" id="profileEmail" class="form-input" placeholder="Enter your email">
+                </div>
+                <div class="form-group">
+                    <label for="profileFullName">Full Name</label>
+                    <input type="text" id="profileFullName" class="form-input" placeholder="Enter your full name">
+                </div>
+                <div class="form-group">
+                    <label for="profilePhone">Phone Number</label>
+                    <input type="tel" id="profilePhone" class="form-input" placeholder="Enter your phone number">
+                </div>
+                <div class="form-group">
+                    <label for="profileBio">Bio</label>
+                    <textarea id="profileBio" class="form-input" rows="3" placeholder="Tell us about yourself..."></textarea>
+                </div>
+                <button type="submit" class="save-btn">
+                    <i class="fas fa-save"></i> Save Profile
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Sample data - replace with real API calls
+        let userData = {
+            username: 'john_doe',
+            email: 'john@example.com',
+            fullName: 'John Doe',
+            phone: '+1234567890',
+            bio: 'Passionate learner exploring new topics through quizzes.',
+            stats: {
+                testsCompleted: 12,
+                averageScore: 85,
+                bestScore: 95,
+                totalTime: 24
+            }
+        };
+
+        // Initialize dashboard
+        document.addEventListener('DOMContentLoaded', () => {
+            loadUserData();
+            loadAvailableTests();
+            loadRecentResults();
+        });
+
+        // Load user data
+        function loadUserData() {
+            document.getElementById('username').textContent = userData.username;
+            document.getElementById('testsCompleted').textContent = userData.stats.testsCompleted;
+            document.getElementById('averageScore').textContent = userData.stats.averageScore + '%';
+            document.getElementById('bestScore').textContent = userData.stats.bestScore + '%';
+            document.getElementById('totalTime').textContent = userData.stats.totalTime + 'h';
+        }
+
+        // Load available tests
+        function loadAvailableTests() {
+            const testsContainer = document.getElementById('availableTests');
+            
+            // Sample tests - replace with API call
+            const tests = [
+                {
+                    id: 1,
+                    title: 'JavaScript Fundamentals',
+                    questions: 25,
+                    timeLimit: 45,
+                    difficulty: 'Intermediate',
+                    status: 'available'
+                },
+                {
+                    id: 2,
+                    title: 'HTML & CSS Basics',
+                    questions: 20,
+                    timeLimit: 30,
+                    difficulty: 'Beginner',
+                    status: 'available'
+                },
+                {
+                    id: 3,
+                    title: 'React Advanced Concepts',
+                    questions: 30,
+                    timeLimit: 60,
+                    difficulty: 'Advanced',
+                    status: 'scheduled'
+                }
+            ];
+
+            testsContainer.innerHTML = tests.map(test => `
+                <div class="test-card">
+                    <div class="test-title">${test.title}</div>
+                    <div class="test-info">
+                        <span><i class="fas fa-question-circle"></i> ${test.questions} Questions</span>
+                        <span><i class="fas fa-clock"></i> ${test.timeLimit} min</span>
+                        <span><i class="fas fa-level-up-alt"></i> ${test.difficulty}</span>
+                    </div>
+                    <button class="start-test-btn" 
+                            ${test.status === 'scheduled' ? 'disabled' : ''} 
+                            onclick="startTest(${test.id})">
+                        ${test.status === 'scheduled' ? 'Scheduled' : 'Start Test'}
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        // Load recent results
+        function loadRecentResults() {
+            const resultsContainer = document.getElementById('recentResults');
+            
+            // Sample results - replace with API call
+            const results = [
+                { testName: 'JavaScript Fundamentals', score: 85, date: '2024-01-15', maxScore: 100 },
+                { testName: 'HTML & CSS Basics', score: 92, date: '2024-01-12', maxScore: 100 },
+                { testName: 'Python Basics', score: 78, date: '2024-01-10', maxScore: 100 }
+            ];
+
+            if (results.length === 0) {
+                resultsContainer.innerHTML = '<p style="text-align: center; color: #6b7280;">No test results yet. Take your first test!</p>';
+                return;
+            }
+
+            resultsContainer.innerHTML = results.map(result => {
+                const percentage = (result.score / result.maxScore) * 100;
+                const scoreClass = percentage >= 80 ? '' : percentage >= 60 ? 'medium' : 'low';
+                
+                return `
+                    <div class="result-item">
+                        <div class="result-info">
+                            <h4>${result.testName}</h4>
+                            <p>Completed on ${new Date(result.date).toLocaleDateString()}</p>
+                        </div>
+                        <div class="result-score">
+                            <div class="score ${scoreClass}">${result.score}/${result.maxScore}</div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Profile Modal Functions
+        function openProfileModal() {
+            const modal = document.getElementById('profileModal');
+            modal.classList.add('show');
+            
+            // Populate profile form
+            document.getElementById('profileUsername').value = userData.username;
+            document.getElementById('profileEmail').value = userData.email || '';
+            document.getElementById('profileFullName').value = userData.fullName || '';
+            document.getElementById('profilePhone').value = userData.phone || '';
+            document.getElementById('profileBio').value = userData.bio || '';
+        }
+
+        function closeProfileModal() {
+            const modal = document.getElementById('profileModal');
+            modal.classList.remove('show');
+        }
+
+        // Profile form submission
+        document.getElementById('profileForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const formData = {
+                email: document.getElementById('profileEmail').value,
+                fullName: document.getElementById('profileFullName').value,
+                phone: document.getElementById('profilePhone').value,
+                bio: document.getElementById('profileBio').value
+            };
+
+            try {
+                // Update profile via API
+                const response = await fetch('/api/user/profile', {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + localStorage.getItem('token')
+                    },
+                    body: JSON.stringify(formData)
+                });
+
+                if (response.ok) {
+                    userData = { ...userData, ...formData };
+                    alert('Profile updated successfully!');
+                    closeProfileModal();
+                } else {
+                    throw new Error('Failed to update profile');
+                }
+            } catch (error) {
+                console.error('Error updating profile:', error);
+                alert('Failed to update profile. Please try again.');
+            }
+        });
+
+        // Start test function
+        function startTest(testId) {
+            if (confirm('Are you ready to start the test? You cannot pause once started.')) {
+                // Redirect to test page
+                window.location.href = `/test/${testId}`;
+            }
+        }
+
+        // Logout function
+        function logout() {
+            if (confirm('Are you sure you want to logout?')) {
+                localStorage.removeItem('token');
+                localStorage.removeItem('userData');
+                window.location.href = '/';
+            }
+        }
+
+        // Close modal when clicking outside
+        document.getElementById('profileModal').addEventListener('click', (e) => {
+            if (e.target.id === 'profileModal') {
+                closeProfileModal();
+            }
+        });
+    </script>
+</body>
+</html>

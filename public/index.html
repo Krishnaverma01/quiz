@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login Portal</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="bg-decoration">
+        <div class="floating-element">
+            <i class="fas fa-brain" style="font-size: 80px;"></i>
+        </div>
+        <div class="floating-element">
+            <i class="fas fa-trophy" style="font-size: 60px;"></i>
+        </div>
+        <div class="floating-element">
+            <i class="fas fa-graduation-cap" style="font-size: 70px;"></i>
+        </div>
+    </div>
+
+    <div class="main-container">
+        <!-- Left Side - Brand Section -->
+        <div class="brand-section">
+            <div class="logo">
+                <i class="fas fa-brain"></i>
+                <h1>QuizMaster Pro</h1>
+            </div>
+            <div class="brand-tagline">Challenge Your Mind, Expand Your Knowledge</div>
+            <p class="brand-description">
+                Join thousands of learners in our interactive quiz platform. Test your knowledge across multiple categories, track your progress, and compete with others in real-time challenges.
+            </p>
+            <ul class="features-list">
+                <li><i class="fas fa-check-circle"></i> Multiple quiz categories</li>
+                <li><i class="fas fa-check-circle"></i> Real-time leaderboards</li>
+                <li><i class="fas fa-check-circle"></i> Progress tracking</li>
+                <li><i class="fas fa-check-circle"></i> Custom quiz creation</li>
+                <li><i class="fas fa-check-circle"></i> Mobile-friendly design</li>
+            </ul>
+        </div>
+
+        <!-- Right Side - Login Panel -->
+        <div class="login-container">
+            <div class="login-header">
+                <h2>Welcome Back!</h2>
+                <p>Please sign in to access your quiz dashboard</p>
+            </div>
+
+            <!-- Tabs - These will be hidden during registration -->
+            <div class="tabs" id="tabs-container">
+                <button id="user-tab" class="tab-button active">
+                    <i class="fas fa-user"></i> Student
+                </button>
+                <button id="admin-tab" class="tab-button">
+                    <i class="fas fa-user-shield"></i> Instructor
+                </button>
+            </div>
+
+            <div class="form-container">
+                <!-- User Login Form -->
+                <form id="user-form" class="login-form active">
+                    <div class="form-group">
+                        <input type="text" id="user-username" class="form-input" placeholder="Enter your username" required>
+                        <i class="fas fa-user input-icon"></i>
+                    </div>
+                    <div class="form-group">
+                        <input type="password" id="user-password" class="form-input" placeholder="Enter your password" required>
+                        <i class="fas fa-eye password-toggle input-icon" onclick="togglePassword('user-password', this)"></i>
+                    </div>
+                    <button type="submit" class="submit-btn">
+                        <span class="btn-text">Sign In</span>
+                        <div class="btn-spinner">
+                            <div class="spinner"></div>
+                        </div>
+                    </button>
+                </form>
+
+                <!-- Admin Login Form -->
+                <form id="admin-form" class="login-form">
+                    <div class="form-group">
+                        <input type="text" id="admin-username" class="form-input" placeholder="Enter instructor username" required>
+                        <i class="fas fa-user-shield input-icon"></i>
+                    </div>
+                    <div class="form-group">
+                        <input type="password" id="admin-password" class="form-input" placeholder="Enter instructor password" required>
+                        <i class="fas fa-eye password-toggle input-icon" onclick="togglePassword('admin-password', this)"></i>
+                    </div>
+                    <button type="submit" class="submit-btn">
+                        <span class="btn-text">Sign In as Instructor</span>
+                        <div class="btn-spinner">
+                            <div class="spinner"></div>
+                        </div>
+                    </button>
+                </form>
+
+                <!-- Registration Form -->
+                <form id="register-form" class="register-form">
+                    <div class="form-group">
+                        <input type="text" id="reg-username" class="form-input" placeholder="Choose a username" required>
+                        <i class="fas fa-user input-icon"></i>
+                    </div>
+                    <div class="form-group">
+                        <input type="email" id="reg-email" class="form-input" placeholder="Enter your email" required>
+                        <i class="fas fa-envelope input-icon"></i>
+                    </div>
+                    <div class="form-group">
+                        <input type="password" id="reg-password" class="form-input" placeholder="Create a password" required>
+                        <i class="fas fa-eye password-toggle input-icon" onclick="togglePassword('reg-password', this)"></i>
+                    </div>
+                    <button type="submit" class="submit-btn">
+                        <span class="btn-text">Create Account</span>
+                        <div class="btn-spinner">
+                            <div class="spinner"></div>
+                        </div>
+                    </button>
+                    <div class="auth-links">
+                        <a href="#" id="back-login" class="auth-link">
+                            <i class="fas fa-arrow-left"></i> Back to Sign In
+                        </a>
+                    </div>
+                </form>
+
+                <div id="message" class="message"></div>
+                <div id="reg-message" class="message"></div>
+            </div>
+
+            <div class="auth-links" id="signup-section">
+                <span style="color: #6b7280;">Don't have an account? </span>
+                <a href="#" id="show-register" class="auth-link">Sign Up</a>
+            </div>
+        </div>
+    </div>
+  <script src="script.js"></script>
+</body>
+</html>

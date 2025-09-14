@@ -1,0 +1,1148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QuizMaster Pro - Admin Dashboard</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        /* Header */
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            padding: 1rem 2rem;
+            box-shadow: 0 2px 20px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: #667eea;
+        }
+
+        .logo i {
+            margin-right: 0.5rem;
+            font-size: 1.8rem;
+        }
+
+        .admin-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .admin-badge {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .logout-btn {
+            background: #ef4444;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .logout-btn:hover {
+            background: #dc2626;
+            transform: translateY(-2px);
+        }
+
+        /* Navigation Tabs */
+        .nav-tabs {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            padding: 1rem 2rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-tab {
+            background: none;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            color: #6b7280;
+        }
+
+        .nav-tab.active {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        }
+
+        .nav-tab:hover:not(.active) {
+            background: #f3f4f6;
+            color: #374151;
+        }
+
+        /* Main Content */
+        .main-content {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Stats Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            padding: 1.5rem;
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .stat-card i {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 0.25rem;
+        }
+
+        .stat-label {
+            color: #6b7280;
+            font-size: 0.9rem;
+        }
+
+        /* Section */
+        .section {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #333;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+
+        /* Tables */
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+
+        .table th,
+        .table td {
+            text-align: left;
+            padding: 1rem;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .table th {
+            background: #f8fafc;
+            font-weight: 600;
+            color: #374151;
+        }
+
+        .table tbody tr:hover {
+            background: #f8fafc;
+        }
+
+        .badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .badge.active {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .badge.scheduled {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .badge.completed {
+            background: #e0e7ff;
+            color: #3730a3;
+        }
+
+        .badge.draft {
+            background: #f3f4f6;
+            color: #374151;
+        }
+
+        /* Action Buttons */
+        .action-btn {
+            background: none;
+            border: none;
+            padding: 0.5rem;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 0 0.25rem;
+        }
+
+        .action-btn:hover {
+            background: #f3f4f6;
+            transform: scale(1.1);
+        }
+
+        .action-btn.edit {
+            color: #3b82f6;
+        }
+
+        .action-btn.delete {
+            color: #ef4444;
+        }
+
+        .action-btn.view {
+            color: #10b981;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            backdrop-filter: blur(4px);
+            z-index: 1000;
+            overflow-y: auto;
+        }
+
+        .modal.show {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 2rem 0;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 2rem;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            width: 90%;
+            max-width: 600px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            border-bottom: 2px solid #e5e7eb;
+            padding-bottom: 1rem;
+        }
+
+        .modal-header h2 {
+            color: #333;
+            font-size: 1.5rem;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #6b7280;
+            padding: 0.5rem;
+            border-radius: 6px;
+        }
+
+        .close-btn:hover {
+            color: #333;
+            background: #f3f4f6;
+        }
+
+        /* Form Styles */
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .form-group label {
+            font-weight: 600;
+            color: #333;
+        }
+
+        .form-input,
+        .form-select,
+        .form-textarea {
+            padding: 0.75rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-input:focus,
+        .form-select:focus,
+        .form-textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .form-textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        /* Question Management */
+        .questions-section {
+            border: 2px dashed #d1d5db;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        .question-item {
+            background: #f8fafc;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .question-header {
+            display: flex;
+            justify-content: between;
+            align-items: flex-start;
+            gap: 1rem;
+        }
+
+        .question-number {
+            background: #667eea;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 0.9rem;
+            flex-shrink: 0;
+        }
+
+        .question-content {
+            flex: 1;
+        }
+
+        .options-list {
+            margin-top: 0.5rem;
+            padding-left: 1rem;
+        }
+
+        .option-item {
+            margin: 0.25rem 0;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+        }
+
+        .option-item.correct {
+            background: #d1fae5;
+            color: #065f46;
+            font-weight: 600;
+        }
+
+        .add-question-btn {
+            background: #f3f4f6;
+            border: 2px dashed #9ca3af;
+            color: #6b7280;
+            padding: 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            width: 100%;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .add-question-btn:hover {
+            background: #e5e7eb;
+            border-color: #667eea;
+            color: #667eea;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .main-content {
+                padding: 0 1rem;
+            }
+
+            .header {
+                padding: 1rem;
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .nav-tabs {
+                padding: 1rem;
+                flex-wrap: wrap;
+                gap: 0.5rem;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .table {
+                font-size: 0.9rem;
+            }
+
+            .table th,
+            .table td {
+                padding: 0.75rem 0.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="header">
+        <div class="logo">
+            <i class="fas fa-shield-alt"></i>
+            QuizMaster Pro - Admin
+        </div>
+        <div class="admin-info">
+            <div class="admin-badge">
+                <i class="fas fa-crown"></i> ADMIN
+            </div>
+            <span>Welcome, <strong id="adminName">Administrator</strong></span>
+            <button class="logout-btn" onclick="logout()">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </button>
+        </div>
+    </div>
+
+    <!-- Navigation Tabs -->
+    <div class="nav-tabs">
+        <button class="nav-tab active" onclick="switchTab('dashboard')">
+            <i class="fas fa-chart-pie"></i> Dashboard
+        </button>
+        <button class="nav-tab" onclick="switchTab('tests')">
+            <i class="fas fa-clipboard-list"></i> Manage Tests
+        </button>
+        <button class="nav-tab" onclick="switchTab('students')">
+            <i class="fas fa-users"></i> Students
+        </button>
+        <button class="nav-tab" onclick="switchTab('results')">
+            <i class="fas fa-chart-bar"></i> Results
+        </button>
+        <button class="nav-tab" onclick="switchTab('schedule')">
+            <i class="fas fa-calendar-alt"></i> Schedule
+        </button>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Dashboard Tab -->
+        <div id="dashboard" class="tab-content active">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <i class="fas fa-clipboard-list"></i>
+                    <div class="stat-number" id="totalTests">0</div>
+                    <div class="stat-label">Total Tests</div>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-users"></i>
+                    <div class="stat-number" id="totalStudents">0</div>
+                    <div class="stat-label">Registered Students</div>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-chart-line"></i>
+                    <div class="stat-number" id="activeTests">0</div>
+                    <div class="stat-label">Active Tests</div>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-percentage"></i>
+                    <div class="stat-number" id="averageScore">0%</div>
+                    <div class="stat-label">Overall Average</div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2 class="section-title">
+                    <i class="fas fa-chart-pie"></i>
+                    Recent Activity
+                </h2>
+                <div id="recentActivity">
+                    <!-- Activity items will be loaded here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Tests Management Tab -->
+        <div id="tests" class="tab-content">
+            <div class="section">
+                <div class="section-header">
+                    <h2 class="section-title">
+                        <i class="fas fa-clipboard-list"></i>
+                        Test Management
+                    </h2>
+                    <button class="btn-primary" onclick="openCreateTestModal()">
+                        <i class="fas fa-plus"></i>
+                        Create New Test
+                    </button>
+                </div>
+                
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Test Name</th>
+                            <th>Questions</th>
+                            <th>Duration</th>
+                            <th>Status</th>
+                            <th>Created</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="testsTableBody">
+                        <!-- Tests will be loaded here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Students Tab -->
+        <div id="students" class="tab-content">
+            <div class="section">
+                <h2 class="section-title">
+                    <i class="fas fa-users"></i>
+                    Student Management
+                </h2>
+                
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Username</th>
+                            <th>Email</th>
+                            <th>Tests Taken</th>
+                            <th>Average Score</th>
+                            <th>Last Activity</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="studentsTableBody">
+                        <!-- Students will be loaded here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Results Tab -->
+        <div id="results" class="tab-content">
+            <div class="section">
+                <h2 class="section-title">
+                    <i class="fas fa-chart-bar"></i>
+                    Test Results & Analytics
+                </h2>
+                
+                <div class="form-grid" style="margin-bottom: 2rem;">
+                    <div class="form-group">
+                        <label for="filterTest">Filter by Test</label>
+                        <select id="filterTest" class="form-select">
+                            <option value="">All Tests</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="filterStudent">Filter by Student</label>
+                        <select id="filterStudent" class="form-select">
+                            <option value="">All Students</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Student</th>
+                            <th>Test</th>
+                            <th>Score</th>
+                            <th>Percentage</th>
+                            <th>Time Taken</th>
+                            <th>Date</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="resultsTableBody">
+                        <!-- Results will be loaded here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Schedule Tab -->
+        <div id="schedule" class="tab-content">
+            <div class="section">
+                <div class="section-header">
+                    <h2 class="section-title">
+                        <i class="fas fa-calendar-alt"></i>
+                        Test Scheduling
+                    </h2>
+                    <button class="btn-primary" onclick="openScheduleModal()">
+                        <i class="fas fa-calendar-plus"></i>
+                        Schedule Test
+                    </button>
+                </div>
+                
+                <div id="scheduledTests">
+                    <!-- Scheduled tests will be loaded here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Create Test Modal -->
+    <div id="createTestModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2><i class="fas fa-plus-circle"></i> Create New Test</h2>
+                <button class="close-btn" onclick="closeModal('createTestModal')">&times;</button>
+            </div>
+            <form id="createTestForm">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="testTitle">Test Title *</label>
+                        <input type="text" id="testTitle" class="form-input" required placeholder="Enter test title">
+                    </div>
+                    <div class="form-group">
+                        <label for="testDuration">Duration (minutes) *</label>
+                        <input type="number" id="testDuration" class="form-input" required min="1" placeholder="30">
+                    </div>
+                    <div class="form-group">
+                        <label for="testCategory">Category</label>
+                        <select id="testCategory" class="form-select">
+                            <option value="Programming">Programming</option>
+                            <option value="Mathematics">Mathematics</option>
+                            <option value="Science">Science</option>
+                            <option value="General">General Knowledge</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="testDifficulty">Difficulty</label>
+                        <select id="testDifficulty" class="form-select">
+                            <option value="Beginner">Beginner</option>
+                            <option value="Intermediate">Intermediate</option>
+                            <option value="Advanced">Advanced</option>
+                        </select>
+                    </div>
+                    <div class="form-group full-width">
+                        <label for="testDescription">Description</label>
+                        <textarea id="testDescription" class="form-textarea" placeholder="Enter test description..."></textarea>
+                    </div>
+                </div>
+                
+                <div class="questions-section">
+                    <h3>Questions</h3>
+                    <div id="questionsList">
+                        <!-- Questions will be added here -->
+                    </div>
+                    <button type="button" class="add-question-btn" onclick="addQuestion()">
+                        <i class="fas fa-plus"></i> Add Question
+                    </button>
+                </div>
+                
+                <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+                    <button type="submit" class="btn-primary" style="flex: 1;">
+                        <i class="fas fa-save"></i> Create Test
+                    </button>
+                    <button type="button" onclick="closeModal('createTestModal')" style="flex: 1; background: #6b7280; color: white; border: none; padding: 0.75rem; border-radius: 8px; cursor: pointer;">
+                        Cancel
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Schedule Test Modal -->
+    <div id="scheduleTestModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2><i class="fas fa-calendar-plus"></i> Schedule Test</h2>
+                <button class="close-btn" onclick="closeModal('scheduleTestModal')">&times;</button>
+            </div>
+            <form id="scheduleTestForm">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="scheduleTest">Select Test *</label>
+                        <select id="scheduleTest" class="form-select" required>
+                            <option value="">Choose a test...</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="scheduleDate">Start Date & Time *</label>
+                        <input type="datetime-local" id="scheduleDate" class="form-input" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="scheduleEndDate">End Date & Time</label>
+                        <input type="datetime-local" id="scheduleEndDate" class="form-input">
+                    </div>
+                    <div class="form-group">
+                        <label for="scheduleStudents">Assign to Students</label>
+                        <select id="scheduleStudents" class="form-select" multiple>
+                            <option value="all">All Students</option>
+                        </select>
+                    </div>
+                    <div class="form-group full-width">
+                        <label for="scheduleInstructions">Special Instructions</label>
+                        <textarea id="scheduleInstructions" class="form-textarea" placeholder="Any special instructions for students..."></textarea>
+                    </div>
+                </div>
+                
+                <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+                    <button type="submit" class="btn-primary" style="flex: 1;">
+                        <i class="fas fa-calendar-check"></i> Schedule Test
+                    </button>
+                    <button type="button" onclick="closeModal('scheduleTestModal')" style="flex: 1; background: #6b7280; color: white; border: none; padding: 0.75rem; border-radius: 8px; cursor: pointer;">
+                        Cancel
+                    </button>
+                    <button>
+                        <nav>
+      <a href="index.html" id="logout">Logout</a>
+    </nav>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        let currentTab = 'dashboard';
+        let questionCount = 0;
+
+        // Sample data - replace with real API calls
+        const sampleData = {
+            stats: {
+                totalTests: 15,
+                totalStudents: 45,
+                activeTests: 5,
+                averageScore: 78
+            },
+            tests: [
+                { id: 1, title: 'JavaScript Fundamentals', questions: 25, duration: 45, status: 'active', created: '2024-01-15' },
+                { id: 2, title: 'HTML & CSS Basics', questions: 20, duration: 30, status: 'scheduled', created: '2024-01-12' },
+                { id: 3, title: 'React Advanced', questions: 30, duration: 60, status: 'draft', created: '2024-01-10' }
+            ],
+            students: [
+                { id: 1, name: 'John Doe', username: 'john_doe', email: 'john@example.com', testsCompleted: 5, averageScore: 85, lastActivity: '2024-01-20' },
+                { id: 2, name: 'Jane Smith', username: 'jane_smith', email: 'jane@example.com', testsCompleted: 3, averageScore: 92, lastActivity: '2024-01-19' }
+            ],
+            results: [
+                { id: 1, studentName: 'John Doe', testTitle: 'JavaScript Fundamentals', score: 85, maxScore: 100, timeTaken: '35 min', date: '2024-01-20' },
+                { id: 2, studentName: 'Jane Smith', testTitle: 'HTML & CSS Basics', score: 92, maxScore: 100, timeTaken: '25 min', date: '2024-01-19' }
+            ]
+        };
+
+        // Initialize dashboard
+        document.addEventListener('DOMContentLoaded', () => {
+            loadDashboardStats();
+            loadTests();
+            loadStudents();
+            loadResults();
+        });
+
+        // Tab switching
+        function switchTab(tabName) {
+            // Update tab buttons
+            document.querySelectorAll('.nav-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            event.target.classList.add('active');
+
+            // Update content
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            document.getElementById(tabName).classList.add('active');
+
+            currentTab = tabName;
+        }
+
+        // Load dashboard stats
+        function loadDashboardStats() {
+            document.getElementById('totalTests').textContent = sampleData.stats.totalTests;
+            document.getElementById('totalStudents').textContent = sampleData.stats.totalStudents;
+            document.getElementById('activeTests').textContent = sampleData.stats.activeTests;
+            document.getElementById('averageScore').textContent = sampleData.stats.averageScore + '%';
+
+            // Load recent activity
+            const activityContainer = document.getElementById('recentActivity');
+            activityContainer.innerHTML = `
+                <div style="color: #6b7280; text-align: center; padding: 2rem;">
+                    <i class="fas fa-chart-line" style="font-size: 3rem; margin-bottom: 1rem; opacity: 0.5;"></i>
+                    <p>Recent activity will appear here</p>
+                </div>
+            `;
+        }
+
+        // Load tests
+        function loadTests() {
+            const tbody = document.getElementById('testsTableBody');
+            tbody.innerHTML = sampleData.tests.map(test => `
+                <tr>
+                    <td><strong>${test.title}</strong></td>
+                    <td>${test.questions} questions</td>
+                    <td>${test.duration} min</td>
+                    <td><span class="badge ${test.status}">${test.status}</span></td>
+                    <td>${new Date(test.created).toLocaleDateString()}</td>
+                    <td>
+                        <button class="action-btn view" title="View" onclick="viewTest(${test.id})">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                        <button class="action-btn edit" title="Edit" onclick="editTest(${test.id})">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="action-btn delete" title="Delete" onclick="deleteTest(${test.id})">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        // Load students
+        function loadStudents() {
+            const tbody = document.getElementById('studentsTableBody');
+            tbody.innerHTML = sampleData.students.map(student => `
+                <tr>
+                    <td><strong>${student.name}</strong></td>
+                    <td>${student.username}</td>
+                    <td>${student.email}</td>
+                    <td>${student.testsCompleted}</td>
+                    <td>${student.averageScore}%</td>
+                    <td>${new Date(student.lastActivity).toLocaleDateString()}</td>
+                    <td>
+                        <button class="action-btn view" title="View Profile" onclick="viewStudent(${student.id})">
+                            <i class="fas fa-user"></i>
+                        </button>
+                        <button class="action-btn edit" title="Send Message" onclick="messageStudent(${student.id})">
+                            <i class="fas fa-envelope"></i>
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        // Load results
+        function loadResults() {
+            const tbody = document.getElementById('resultsTableBody');
+            tbody.innerHTML = sampleData.results.map(result => {
+                const percentage = Math.round((result.score / result.maxScore) * 100);
+                return `
+                    <tr>
+                        <td><strong>${result.studentName}</strong></td>
+                        <td>${result.testTitle}</td>
+                        <td>${result.score}/${result.maxScore}</td>
+                        <td>${percentage}%</td>
+                        <td>${result.timeTaken}</td>
+                        <td>${new Date(result.date).toLocaleDateString()}</td>
+                        <td>
+                            <button class="action-btn view" title="View Details" onclick="viewResult(${result.id})">
+                                <i class="fas fa-chart-bar"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        // Modal functions
+        function openCreateTestModal() {
+            document.getElementById('createTestModal').classList.add('show');
+        }
+
+        function openScheduleModal() {
+            document.getElementById('scheduleTestModal').classList.add('show');
+            // Populate test dropdown
+            const testSelect = document.getElementById('scheduleTest');
+            testSelect.innerHTML = '<option value="">Choose a test...</option>' +
+                sampleData.tests.map(test => `<option value="${test.id}">${test.title}</option>`).join('');
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('show');
+        }
+
+        // Add question to test
+        function addQuestion() {
+            questionCount++;
+            const questionsList = document.getElementById('questionsList');
+            const questionHTML = `
+                <div class="question-item" id="question-${questionCount}">
+                    <div class="question-header">
+                        <div class="question-number">${questionCount}</div>
+                        <div class="question-content">
+                            <input type="text" class="form-input" placeholder="Enter your question..." required>
+                            <div class="options-list">
+                                <input type="text" class="form-input" placeholder="Option A" style="margin: 0.25rem 0;">
+                                <input type="text" class="form-input" placeholder="Option B" style="margin: 0.25rem 0;">
+                                <input type="text" class="form-input" placeholder="Option C" style="margin: 0.25rem 0;">
+                                <input type="text" class="form-input" placeholder="Option D" style="margin: 0.25rem 0;">
+                                <select class="form-select" style="margin: 0.5rem 0;">
+                                    <option value="">Select correct answer</option>
+                                    <option value="A">Option A</option>
+                                    <option value="B">Option B</option>
+                                    <option value="C">Option C</option>
+                                    <option value="D">Option D</option>
+                                </select>
+                            </div>
+                        </div>
+                        <button type="button" class="action-btn delete" onclick="removeQuestion(${questionCount})" title="Remove Question">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                </div>
+            `;
+            questionsList.insertAdjacentHTML('beforeend', questionHTML);
+        }
+
+        function removeQuestion(questionId) {
+            document.getElementById(`question-${questionId}`).remove();
+        }
+
+        // Form submissions
+        document.getElementById('createTestForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const formData = new FormData(e.target);
+            const testData = {
+                title: document.getElementById('testTitle').value,
+                duration: document.getElementById('testDuration').value,
+                category: document.getElementById('testCategory').value,
+                difficulty: document.getElementById('testDifficulty').value,
+                description: document.getElementById('testDescription').value,
+                questions: [] // Collect questions from the form
+            };
+
+            try {
+                const response = await fetch('/api/admin/tests', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + localStorage.getItem('adminToken')
+                    },
+                    body: JSON.stringify(testData)
+                });
+
+                if (response.ok) {
+                    alert('Test created successfully!');
+                    closeModal('createTestModal');
+                    loadTests();
+                    e.target.reset();
+                    document.getElementById('questionsList').innerHTML = '';
+                    questionCount = 0;
+                } else {
+                    throw new Error('Failed to create test');
+                }
+            } catch (error) {
+                console.error('Error creating test:', error);
+                alert('Failed to create test. Please try again.');
+            }
+        });
+
+        document.getElementById('scheduleTestForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const scheduleData = {
+                testId: document.getElementById('scheduleTest').value,
+                startDate: document.getElementById('scheduleDate').value,
+                endDate: document.getElementById('scheduleEndDate').value,
+                students: Array.from(document.getElementById('scheduleStudents').selectedOptions).map(option => option.value),
+                instructions: document.getElementById('scheduleInstructions').value
+            };
+
+            try {
+                const response = await fetch('/api/admin/schedule', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + localStorage.getItem('adminToken')
+                    },
+                    body: JSON.stringify(scheduleData)
+                });
+
+                if (response.ok) {
+                    alert('Test scheduled successfully!');
+                    closeModal('scheduleTestModal');
+                    e.target.reset();
+                } else {
+                    throw new Error('Failed to schedule test');
+                }
+            } catch (error) {
+                console.error('Error scheduling test:', error);
+                alert('Failed to schedule test. Please try again.');
+            }
+        });
+
+        // Action functions
+        function viewTest(testId) {
+            alert(`Viewing test details for test ID: ${testId}`);
+            // Implement view test details
+        }
+
+        function editTest(testId) {
+            alert(`Editing test ID: ${testId}`);
+            // Implement edit test functionality
+        }
+
+        function deleteTest(testId) {
+            if (confirm('Are you sure you want to delete this test?')) {
+                // Implement delete test functionality
+                alert(`Test ${testId} deleted`);
+                loadTests();
+            }
+        }
+
+        function viewStudent(studentId) {
+            alert(`Viewing student profile for ID: ${studentId}`);
+            // Implement view student profile
+        }
+
+        function messageStudent(studentId) {
+            alert(`Sending message to student ID: ${studentId}`);
+            // Implement messaging functionality
+        }
+
+        function viewResult(resultId) {
+            alert(`Viewing detailed results for ID: ${resultId}`);
+            // Implement view result details
+        }
+
+        // Logout function
+        function logout() {
+            if (confirm('Are you sure you want to logout?')) {
+                localStorage.removeItem('adminToken');
+                localStorage.removeItem('adminData');
+                window.location.href = '/';
+            }
+        }
+
+        // Close modals when clicking outside
+        document.addEventListener('click', (e) => {
+            if (e.target.classList.contains('modal')) {
+                e.target.classList.remove('show');
+            }
+        });
+
+        // Initialize with first question when creating test
+        setTimeout(() => {
+            if (document.getElementById('createTestModal').classList.contains('show')) {
+                addQuestion();
+            }
+        }, 100);
+    </script>
+</body>
+</html>
